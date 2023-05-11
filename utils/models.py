@@ -157,7 +157,8 @@ class P2PNet(tf.keras.models.Model):
 
         reg = reg * self.gamma + ref_points
 
-        outputs = tf.concat([reg, cls], axis=-1)
+        # outputs = tf.concat([reg, cls], axis=-1, name='output')
+        outputs = tf.keras.layers.Concatenate(axis=-1, name='output')([reg, cls])
         return outputs
 
     def train_step(self, data):
@@ -198,7 +199,7 @@ class P2PNet(tf.keras.models.Model):
     #     super(P2PNet, self).build(input_shape)
 
     def build_graph(self, shape=(128, 128, 3)):
-        x = tf.keras.layers.Input(shape=shape)
+        x = tf.keras.layers.Input(shape=shape, name='input')
         return tf.keras.models.Model(inputs=[x], outputs=self.call(x))
 
     def get_config(self):

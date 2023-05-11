@@ -28,9 +28,9 @@ def load_feature_extraction_model(model_name=None, input_shape=(None,None,3), pr
     model_fn = model_map["core"]
     layers_names = model_map["intermediate_layer_names"]
     logger.info(model_map)
-    
-    backbone = select_backbone(model_fn, input_shape, preprocessing)   
-    
+
+    backbone = select_backbone(model_fn, input_shape, preprocessing)
+
     feature_extraction_model = tf.keras.Model(inputs=backbone.input, outputs=[backbone.get_layer(layer).output for layer in layers_names], name = name)
 
     # add preprocessing layer if needed
@@ -39,12 +39,12 @@ def load_feature_extraction_model(model_name=None, input_shape=(None,None,3), pr
         preprocessed_inputs = tf.keras.layers.Lambda(model_map["preprocess_input"], "preproc", name="preproc")(inputs)
         outputs = feature_extraction_model(preprocessed_inputs)
         feature_extraction_model = tf.keras.Model(inputs=inputs, outputs=outputs, name = name)
-        
+
     return feature_extraction_model
 
-def select_backbone(model_fn, input_shape, preprocessing):    
+def select_backbone(model_fn, input_shape, preprocessing):
     # Check if class has the attribute include_preprocessing
-    # due to keras name space issue, cannnot use hasattr currently. 
+    # due to keras name space issue, cannnot use hasattr currently.
     try:
         model = model_fn(
             include_top=False,
@@ -60,5 +60,5 @@ def select_backbone(model_fn, input_shape, preprocessing):
             input_shape=input_shape,
             pooling=None,
             )
-        
+
     return model
