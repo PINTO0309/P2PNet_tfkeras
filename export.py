@@ -61,6 +61,7 @@ for H, W in RESOLUTION:
     model_simp, check = simplify(model_onnx)
     onnx.save(model_simp, f'./p2pnet_vgg16_{H}x{W}.onnx')
 
+for H, W in RESOLUTION:
     if H is not None and W is not None:
         onnx2tf.convert(
             input_onnx_file_path=f'./p2pnet_vgg16_{H}x{W}.onnx',
